@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using Enums;
 using TMPro;
 using System.ComponentModel;
+using Unity.VisualScripting;
 
 public class CommunicationHandler : NPC, ICommunication
 {
@@ -17,6 +18,8 @@ public class CommunicationHandler : NPC, ICommunication
     [SerializeField] private GameObject my;
     [SerializeField] private TextMeshProUGUI communicationName;
     [SerializeField] private TextMeshProUGUI communication;
+    protected DoorAnimationHandler doorAnimationHandler;
+    [SerializeField] private GameObject doorParent;
 
     private Queue<DialogueEntry> dialogueQueue;
     private bool isDialogueActive = false;
@@ -27,6 +30,7 @@ public class CommunicationHandler : NPC, ICommunication
         dialogueQueue = new Queue<DialogueEntry>();
         opponent.gameObject.SetActive(false);
         my.gameObject.SetActive(false);
+        doorAnimationHandler = GetComponent<DoorAnimationHandler>();
     }
 
     private void Update()
@@ -80,6 +84,17 @@ public class CommunicationHandler : NPC, ICommunication
                     imageComponent.sprite = opponentSprites[3];
                     rectTransform.sizeDelta = new Vector2(200f, 200f);  // 너비 200, 높이 100으로 설정
                     break;
+                case "Door_Lv1":
+                case "Door_Lv2":
+                case "Door_Lv3":
+                    communicationName.text = "문";
+                    DoorAnimationHandler handler = GetComponent<DoorAnimationHandler>();
+                    if (handler != null)
+                    {
+                        handler.Lock(); // 메서드 이름은 상황에 따라 변경
+                        Invoke("UnlockDoor", 1f);
+                    }
+                    break;
             }
         }
         Communication(NPCName);
@@ -124,6 +139,11 @@ public class CommunicationHandler : NPC, ICommunication
                 AddDialogueToQueue("(말이 통하질 않는 듯하다.)");
                 AddDialogueToQueue("(2단계 게임을 깨고 오면 방법이 생길지도..?)");
                 break;
+            case "Door_Lv1":
+            case "Door_Lv2":
+            case "Door_Lv3":
+                AddDialogueToQueue("열리지 않는다.");
+                break;
         }
         
     }
@@ -165,6 +185,12 @@ public class CommunicationHandler : NPC, ICommunication
     public void CommunicationEnd()
     {
         chatWindow.SetActive(false);
+    }
+
+    void UnlockDoor()
+    {
+        DoorAnimationHandler handler = GetComponent<DoorAnimationHandler>();
+        handler.UnLock();
     }
 
     private class DialogueEntry
