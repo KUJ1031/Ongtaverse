@@ -5,6 +5,9 @@ using UnityEngine;
 public class PlayerController : BaseController
 {
     private Camera camera;
+    private bool isColliding = false;
+
+    CommunicationHandler communicationHandler;
 
     protected override void HandleAction()
     {
@@ -24,5 +27,39 @@ public class PlayerController : BaseController
         {
             lookDirection = lookDirection.normalized;
         }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        isColliding = true;
+        communicationHandler = collision.gameObject.GetComponent<CommunicationHandler>();
+        Debug.Log(isColliding);
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if (isColliding && Input.GetKey(KeyCode.Space))
+        {
+            if (communicationHandler != null)
+            {
+                Debug.Log(collision.gameObject.name + "과의 대화를 시작합니다.");
+                communicationHandler.SetActiveChatWindow();
+                communicationHandler.CheckNPCNameAndChangeImage(collision.gameObject.name);
+
+            }
+            else
+            {
+                Debug.LogError("communicationHandler가 null입니다. 충돌한 NPC에서 컴포넌트를 가져왔는지 확인하세요.");
+            }
+
+            isColliding = false;
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        isColliding = false; // 충돌 종료 시 상태 초기화
+        communicationHandler.CommunicationEnd();
+        Debug.Log(isColliding);
     }
 }
