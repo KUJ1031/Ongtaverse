@@ -34,6 +34,7 @@ public class PlayerController : BaseController
         isColliding = true;
         communicationHandler = collision.gameObject.GetComponent<CommunicationHandler>();
         Debug.Log(isColliding);
+        Debug.Log(collision.gameObject.name);
     }
 
     private void OnCollisionStay2D(Collision2D collision)
@@ -42,7 +43,7 @@ public class PlayerController : BaseController
         {
             if (communicationHandler != null)
             {
-                Debug.Log(collision.gameObject.name + "과의 대화를 시작합니다.");
+                Debug.Log("상호작용 : " + collision.gameObject.name);
                 communicationHandler.SetActiveChatWindow();
                 communicationHandler.CheckNPCNameAndChangeImage(collision.gameObject.name);
 
