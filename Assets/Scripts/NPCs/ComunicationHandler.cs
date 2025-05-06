@@ -11,6 +11,8 @@ using Unity.VisualScripting;
 public class CommunicationHandler : NPC, ICommunication
 {
     [SerializeField] private GameObject chatWindow;
+    [SerializeField] private GameObject ExitAlertWindow;
+    
 
     [SerializeField] private GameObject opponent;
     [SerializeField] private Sprite[] opponentSprites;
@@ -20,7 +22,7 @@ public class CommunicationHandler : NPC, ICommunication
     [SerializeField] private TextMeshProUGUI communication;
     protected DoorAnimationHandler doorAnimationHandler;
 
-    public GameManager gameManager;
+    public SystemManager systemManager;
 
     private Queue<DialogueEntry> dialogueQueue;
     private bool isDialogueActive = false;
@@ -33,10 +35,12 @@ public class CommunicationHandler : NPC, ICommunication
         my.gameObject.SetActive(false);
         doorAnimationHandler = GetComponent<DoorAnimationHandler>();
 
-        if (gameManager == null)
+       // ExitAlertWindow.SetActive(false);
+
+        if (systemManager == null)
         {
-            gameManager = FindObjectOfType<GameManager>();
-            if (gameManager == null)
+            systemManager = FindObjectOfType<SystemManager>();
+            if (systemManager == null)
             {
                 Debug.LogError("GameManager를 찾을 수 없습니다. 씬에 존재하는지 확인하세요.");
             }
@@ -51,17 +55,6 @@ public class CommunicationHandler : NPC, ICommunication
         }
     }
 
-    public void SetActiveChatWindow()
-    {
-        if (chatWindow != null)
-        {
-            chatWindow.SetActive(true);
-        }
-        else
-        {
-            Debug.LogError("chatWindow가 null입니다. Inspector에 GameObject를 할당했는지 확인하세요.");
-        }
-    }
     public void CheckNPCNameAndChangeImage(string NPCName)
     {
         Image imageComponent = opponent.GetComponent<Image>();
@@ -94,35 +87,77 @@ public class CommunicationHandler : NPC, ICommunication
                     rectTransform.sizeDelta = new Vector2(200f, 200f);  // 너비 200, 높이 100으로 설정
                     break;
                 case "Door_Lv1":
-                case "Door_Lv2":
-                case "Door_Lv3":
                     communicationName.text = "문";
-                    DoorAnimationHandler handler = GetComponentInChildren<DoorAnimationHandler>();
-                    if (handler != null)
+                    DoorAnimationHandler handler1 = GetComponentInChildren<DoorAnimationHandler>();
+                    if (handler1 != null)
                     {
-                        if (GameManager.instance.IsLv1DoorOpened)
+                        if (SystemManager.instance.IsLv1DoorOpened)
                         {
-                            GameManager.instance.OpenDoor_Lv1();
-                        }
-                        if (GameManager.instance.IsLv2DoorOpened)
-                        {
-                            GameManager.instance.OpenDoor_Lv2();
-                        }
-                        if (GameManager.instance.IsLv3DoorOpened)
-                        {
-                            GameManager.instance.OpenDoor_Lv3();
+                            SystemManager.instance.OpenDoor_Lv1();
                         }
                         else
-                            handler.Lock(); // 메서드 이름은 상황에 따라 변경
-                        Invoke("UnlockDoor", 1f);
+                        {
+                            handler1.Lock(); // 잠김 애니메이션
+                            Invoke("UnlockDoor", 1f);
+                        }
+                    }
+                    break;
+
+                case "Door_Lv2":
+                    communicationName.text = "문";
+                    DoorAnimationHandler handler2 = GetComponentInChildren<DoorAnimationHandler>();
+                    if (handler2 != null)
+                    {
+                        if (SystemManager.instance.IsLv2DoorOpened)
+                        {
+                            SystemManager.instance.OpenDoor_Lv2();
+                        }
+                        else
+                        {
+                            handler2.Lock();
+                            Invoke("UnlockDoor", 1f);
+                        }
+                    }
+                    break;
+
+                case "Door_Lv3":
+                    communicationName.text = "문";
+                    DoorAnimationHandler handler3 = GetComponentInChildren<DoorAnimationHandler>();
+                    if (handler3 != null)
+                    {
+                        if (SystemManager.instance.IsLv3DoorOpened)
+                        {
+                            SystemManager.instance.OpenDoor_Lv3();
+                        }
+                        else
+                        {
+                            handler3.Lock();
+                            Invoke("UnlockDoor", 1f);
+                        }
                     }
                     break;
                 case "Door_Exit":
                     communicationName.text = "전설의 모험가";
                     imageComponent.sprite = opponentSprites[0];
                     rectTransform.sizeDelta = new Vector2(140f, 220f);  // 너비 200, 높이 100으로 설정
-                    GameManager.instance.OpenDoor_Exit();
+                    SystemManager.instance.OpenDoor_Exit();
                     break;
+                case "Ladder_Lv1":
+                    {
+                        SystemManager.instance.Init_Level1();
+                    }
+                    break;
+                case "Ladder_Lv2":
+                    {
+                        SystemManager.instance.Init_Level2();
+                    }
+                    break;
+                case "Ladder_Lv3":
+                    {
+                        SystemManager.instance.Init_Level3();
+                    }
+                    break;
+                    
             }
         }
         Communication(NPCName);
@@ -143,7 +178,7 @@ public class CommunicationHandler : NPC, ICommunication
                 AddDialogueToQueue("...", ChangeMyImage);
                 break;
             case "NPC_Angel":
-                if (GameManager.instance.IsLv1DoorOpened)
+                if (SystemManager.instance.IsLv1DoorOpened)
                 {
                     AddDialogueToQueue("뭐야, 문 열린 거 못 봤어요?", ChangeOpponentImage);
                     AddDialogueToQueue("빨리 들어가요. 안에서 난이도 조절도 가능하니 알아서 하세요.");
@@ -160,9 +195,8 @@ public class CommunicationHandler : NPC, ICommunication
                     AddDialogueToQueue("뭐, 첫 번째 문은 열어줄테니까 들어가보든가 해요.");
                     AddDialogueToQueue("...", ChangeMyImage);
                     AddDialogueToQueue("(이렇게 불친절한 천사가 있나..?)");
-                    GameManager.instance.IsLv1DoorOpened = true;
+                    SystemManager.instance.IsLv1DoorOpened = true;
                 }
-                
                 break;
             case "NPC_Demon":
                 AddDialogueToQueue("..?", ChangeOpponentImage);
@@ -181,38 +215,68 @@ public class CommunicationHandler : NPC, ICommunication
                 AddDialogueToQueue("(2단계 게임을 깨고 오면 방법이 생길지도..?)");
                 break;
             case "Door_Lv1":
-                if (!GameManager.instance.IsLv1DoorOpened) AddDialogueToQueue("열리지 않는다.", ChangeMyImage);
+                if (!SystemManager.instance.IsLv1DoorOpened) AddDialogueToQueue("열리지 않는다.", ChangeMyImage);
                 break;
             case "Door_Lv2":
-                if (!GameManager.instance.IsLv2DoorOpened) AddDialogueToQueue("열리지 않는다.", ChangeMyImage);
+                if (!SystemManager.instance.IsLv2DoorOpened) AddDialogueToQueue("열리지 않는다.", ChangeMyImage);
                 break;
             case "Door_Lv3":
-                if (!GameManager.instance.IsLv3DoorOpened) AddDialogueToQueue("열리지 않는다.", ChangeMyImage);
+                if (!SystemManager.instance.IsLv3DoorOpened) AddDialogueToQueue("열리지 않는다.", ChangeMyImage);
                 break;
             case "Door_Exit":
-                if (!GameManager.instance.IsExit)
+                if (!SystemManager.instance.IsExit)
                 {
                     AddDialogueToQueue("오, 나가고 싶은건가?", ChangeOpponentImage);
                     AddDialogueToQueue("굳이 나가겠다면 말리지야 않겠네.");
                     AddDialogueToQueue("문을 열어주지, 안녕히 가시게.");
-                    GameManager.instance.IsExit = true;
+                    SystemManager.instance.IsExit = true;
                 }
                 
                 break;
-
-                /*
-                AddDialogueToQueue("문을 열어주지,안녕히 가시게.", () =>
-                {
-#if UNITY_EDITOR
-                    UnityEditor.EditorApplication.isPlaying = false; // 에디터 모드 종료
-#else
-            Application.Quit(); // 빌드된 앱 종료
-#endif
-                });
-                */
-                break;
         }
 
+    }
+    public void SetActiveChatWindow()
+    {
+        if (chatWindow != null)
+        {
+            chatWindow.SetActive(true);
+        }
+        else
+        {
+            Debug.LogError("chatWindow가 null입니다. Inspector에 GameObject를 할당했는지 확인하세요.");
+        }
+    }
+
+    public void SetActiveExitAlert()
+    {
+        if (ExitAlertWindow != null)
+        {
+            ExitAlertWindow.SetActive(true);
+            Debug.Log("ExitAlertWindow 활성화.");
+        }
+        else
+        {
+            Debug.LogError("ExitAlertWindow null입니다. Inspector에 GameObject를 할당했는지 확인하세요.");
+        }
+    }
+
+    public void CheckExit()
+    {
+        SetActiveExitAlert();
+    }
+
+    public void SetActiveLv1GameStartWindow()
+    {
+        if (ExitAlertWindow != null)
+        {
+            ExitAlertWindow.SetActive(true);
+            Debug.Log("ExitAlertWindow 활성화.");
+        }
+        else
+        {
+            Debug.LogError("ExitAlertWindow null입니다. Inspector에 GameObject를 할당했는지 확인하세요.");
+        }
     }
 
     // 대사를 큐에 추가
@@ -252,6 +316,7 @@ public class CommunicationHandler : NPC, ICommunication
     public void CommunicationEnd()
     {
         chatWindow.SetActive(false);
+        if (ExitAlertWindow) ExitAlertWindow.SetActive(false);
     }
 
     void UnlockDoor()

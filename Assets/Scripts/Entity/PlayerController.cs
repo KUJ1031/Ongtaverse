@@ -35,6 +35,11 @@ public class PlayerController : BaseController
         communicationHandler = collision.gameObject.GetComponent<CommunicationHandler>();
         Debug.Log(isColliding);
         Debug.Log(collision.gameObject.name);
+
+        if (collision.gameObject.name == "Exit")
+        {
+            communicationHandler.CheckExit();
+        }
     }
 
     private void OnCollisionStay2D(Collision2D collision)
