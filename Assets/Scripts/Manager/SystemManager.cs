@@ -98,11 +98,11 @@ public class SystemManager : MonoBehaviour
     }
     public void Init_Level2()
     {
-        Debug.Log("Init_Level2");
+        SceneManager.LoadScene("GameScene_2");
     }
     public void Init_Level3()
     {
-        Debug.Log("Init_Level3");
+        SceneManager.LoadScene("GameScene_3");
     }
 
     public void OpenDoor_Lv1()

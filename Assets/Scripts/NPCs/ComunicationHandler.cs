@@ -169,28 +169,80 @@ public class CommunicationHandler : NPC, ICommunication
         switch (NPCName)
         {
             case "NPC_Legend":
-                AddDialogueToQueue("오, 자네는 누구인가?", ChangeOpponentImage);
-                AddDialogueToQueue("어... 제 이름은...", ChangeMyImage);
-                AddDialogueToQueue("아, 됐네, 크게 중요한 사항은 아니니.", ChangeOpponentImage);
-                AddDialogueToQueue("그보다도, 저 앞의 세 개의 문이 보이는가?");
-                AddDialogueToQueue("들어가보면 재미있는 일이 기다리고 있을 걸세.");
-                AddDialogueToQueue("한 번 가보는 걸 추천하지.");
-                AddDialogueToQueue("...", ChangeMyImage);
+                if (GameManager.Instance.isLv3Clear)
+                {
+                    AddDialogueToQueue("오, 마침내...", ChangeOpponentImage);
+                    AddDialogueToQueue("...", ChangeMyImage);
+                    AddDialogueToQueue("마침내, 모든 게임을 클리어한 자가 나타나다니!", ChangeOpponentImage);
+                    AddDialogueToQueue("정말 축하하네, 상으로 엄청난 선물을 주겠네.");
+                    AddDialogueToQueue("그건 바로...");
+                    AddDialogueToQueue("무한 모드를 해금해주겠네! 이제 목표량 상관 없이 최고 점수를 노려볼 수 있을거야!");
+                    AddDialogueToQueue("...", ChangeMyImage);
+                    AddDialogueToQueue("...", ChangeOpponentImage);
+                    AddDialogueToQueue("...", ChangeMyImage);
+                    AddDialogueToQueue("...", ChangeOpponentImage);
+                    AddDialogueToQueue("그렇게나 기쁜가?");
+                }
+                else
+                {
+                    AddDialogueToQueue("오, 자네는 누구인가?", ChangeOpponentImage);
+                    AddDialogueToQueue("어... 제 이름은...", ChangeMyImage);
+                    AddDialogueToQueue("아, 됐네, 크게 중요한 사항은 아니니.", ChangeOpponentImage);
+                    AddDialogueToQueue("그보다도, 저 앞의 세 개의 문이 보이는가?");
+                    AddDialogueToQueue("들어가보면 재미있는 일이 기다리고 있을 걸세.");
+                    AddDialogueToQueue("한 번 가보는 걸 추천하지.");
+                    AddDialogueToQueue("...", ChangeMyImage);
+                }                    
                 break;
             case "NPC_Angel":
+                if (SystemManager.instance.IsLv1DoorOpened && SystemManager.instance.IsLv2DoorOpened && GameManager.Instance.isLv3Clear)
+                {
+                    AddDialogueToQueue("에엥? 3단계도 깼다구요?", ChangeOpponentImage);
+                    AddDialogueToQueue("축하해요. 이건 진심이에요.");
+                    AddDialogueToQueue("...", ChangeMyImage);
+                    AddDialogueToQueue("(얘 축하도 할 줄 아는구나...)");
+                    AddDialogueToQueue("근데 저한테 말 걸 시간이 있나요?", ChangeOpponentImage);
+                    AddDialogueToQueue("저 밑에 전설의 마법사가 기다리고 있는걸요?");
+                    AddDialogueToQueue("...", ChangeMyImage);
+                    AddDialogueToQueue("(그럼 그렇지...)");
+                    break;
+                }
+                if (SystemManager.instance.IsLv1DoorOpened && SystemManager.instance.IsLv2DoorOpened && SystemManager.instance.IsLv3DoorOpened)
+                {
+                    AddDialogueToQueue("엥? 2단계도 깼어요?", ChangeOpponentImage);
+                    AddDialogueToQueue("조금 대단하시네요. 저만큼은 아니지만.");
+                    AddDialogueToQueue("...", ChangeMyImage);
+                    AddDialogueToQueue("근데 왜 자꾸 일부러 말 걸러 오시죠?", ChangeOpponentImage);
+                    AddDialogueToQueue("밑에 전설의 마법사나 보러 가시죠. 기다리고 있는 것같던데...");
+                    AddDialogueToQueue("...", ChangeMyImage);
+                    AddDialogueToQueue("(얘 천사 맞아?)", ChangeMyImage);
+                    break;
+                }
+                if (SystemManager.instance.IsLv1DoorOpened && SystemManager.instance.IsLv2DoorOpened)
+                {
+                    AddDialogueToQueue("오, 1단계 깨셨네요?", ChangeOpponentImage);
+                    AddDialogueToQueue("축하해요. 근데 그렇게 대단한 일은 아니네요.");
+                    AddDialogueToQueue("...", ChangeMyImage);
+                    AddDialogueToQueue("옆에 문 열렸을테니까 2단계 하러가세요.", ChangeOpponentImage);
+                    AddDialogueToQueue("전 좀 쉴게요.");
+                    AddDialogueToQueue("...", ChangeMyImage);
+                    AddDialogueToQueue("(이거 인권센터에 고발 못 하나..?)", ChangeMyImage);
+                    break;
+                }
                 if (SystemManager.instance.IsLv1DoorOpened)
                 {
                     AddDialogueToQueue("뭐야, 문 열린 거 못 봤어요?", ChangeOpponentImage);
                     AddDialogueToQueue("빨리 들어가요. 안에서 난이도 조절도 가능하니 알아서 하세요.");
                     AddDialogueToQueue("...", ChangeMyImage);
                     AddDialogueToQueue("(한 대 쥐어박고 싶다...)", ChangeMyImage);
+                    break;
                 }
                 else
                 {
                     AddDialogueToQueue("당신은 누구신가요?", ChangeOpponentImage);
-                    AddDialogueToQueue("아, 됐어요. PlappyKnight 게임 하실거에요?");
+                    AddDialogueToQueue("아, 됐어요. 안에 들어가실거에요?");
                     AddDialogueToQueue("..?", ChangeMyImage);
-                    AddDialogueToQueue("설명은 안에 들어가면 있어요.", ChangeOpponentImage);
+                    AddDialogueToQueue("게임 설명은 안에 들어가면 있어요.", ChangeOpponentImage);
                     AddDialogueToQueue("하든지 말든지 상관은 없지만, 이거 못 깨면 옆에 녀석이 문 안 열어줄걸요?");
                     AddDialogueToQueue("뭐, 첫 번째 문은 열어줄테니까 들어가보든가 해요.");
                     AddDialogueToQueue("...", ChangeMyImage);
@@ -198,22 +250,92 @@ public class CommunicationHandler : NPC, ICommunication
                     SystemManager.instance.IsLv1DoorOpened = true;
                 }
                 break;
+                
             case "NPC_Demon":
-                AddDialogueToQueue("..?", ChangeOpponentImage);
-                AddDialogueToQueue("뭐야, 허접해보이는 녀석.");
-                AddDialogueToQueue("최소 1단계 게임은 깨고 오라구.");
-                AddDialogueToQueue("(PlappyKnight를 깨고 와야 할 듯하다...)", ChangeMyImage);
-                AddDialogueToQueue("...");
-                AddDialogueToQueue("(그래도 천사보단 친절하네...)");
-                break;
+                if (SystemManager.instance.IsLv2DoorOpened && GameManager.Instance.isLv3Clear)
+                {
+                    AddDialogueToQueue("뭐야, 3단계를 깬 건가!", ChangeOpponentImage);
+                    AddDialogueToQueue("정말 훌륭하군! 특별히 그림일기장이라도 하나 사주겠네!");
+                    AddDialogueToQueue("...", ChangeMyImage);
+                    AddDialogueToQueue("(왜 이렇게 일기를 좋아하지?)");
+                    AddDialogueToQueue("밑에 마법사에게 가보게", ChangeOpponentImage);
+                    AddDialogueToQueue("분명 자네에게 어마어마한 선물을 줄 걸세.");
+                    AddDialogueToQueue("...", ChangeMyImage);
+                    AddDialogueToQueue("(가보자.)");
+                    break;
+                }
+                if (SystemManager.instance.IsLv2DoorOpened && SystemManager.instance.IsLv3DoorOpened)
+                {
+                    AddDialogueToQueue("오. 훌륭하게 2단계를 클리어해냈구만.", ChangeOpponentImage);
+                    AddDialogueToQueue("잘했네. 오늘 일기장에 써도 좋아.");
+                    AddDialogueToQueue("(...일기장?)", ChangeMyImage);
+                    AddDialogueToQueue("옆에 좀비한테 가보지 않겠나?", ChangeOpponentImage);
+                    AddDialogueToQueue("엄청 기뻐할 것같구만.");
+                    AddDialogueToQueue("...", ChangeMyImage);
+                    break;
+                }
+                if (SystemManager.instance.IsLv2DoorOpened)
+                {
+                    AddDialogueToQueue("오, 1단계 게임을 깨고 왔군.", ChangeOpponentImage);
+                    AddDialogueToQueue("그래도 최소한의 실력은 있는 것같구만.");
+                    AddDialogueToQueue("문을 열어주지. 이제 앞으로 갈 수 있을거야.");
+                    AddDialogueToQueue("힘내라구. 친구.");
+                    AddDialogueToQueue("...", ChangeMyImage);
+                    AddDialogueToQueue("(역시 이 녀석 친절하네...)");
+                }
+                else
+                {
+                    AddDialogueToQueue("..?", ChangeOpponentImage);
+                    AddDialogueToQueue("뭐야, 허접해보이는 녀석.");
+                    AddDialogueToQueue("최소 1단계 게임은 깨고 오라구.");
+                    AddDialogueToQueue("(1단계를 깨고 와야 할 듯하다...)", ChangeMyImage);
+                    AddDialogueToQueue("...");
+                    AddDialogueToQueue("(그래도 천사보단 친절하네...)");
+                }
+                    break;
+
             case "NPC_Zombie":
-                AddDialogueToQueue("으어...", ChangeOpponentImage);
-                AddDialogueToQueue("그어어어...");
-                AddDialogueToQueue("끄어어어어어...");
-                AddDialogueToQueue("...", ChangeMyImage);
-                AddDialogueToQueue("(말이 통하질 않는 듯하다.)");
-                AddDialogueToQueue("(2단계 게임을 깨고 오면 방법이 생길지도..?)");
-                break;
+                if (GameManager.Instance.isLv3Clear)
+                {
+                    AddDialogueToQueue("아니!!! 3단계를 깼다고!!!", ChangeOpponentImage);
+                    AddDialogueToQueue("이렇게 대애애단할 수가!! 내 정말 축하하ㄴ...");
+                    AddDialogueToQueue("...");
+                    AddDialogueToQueue("...", ChangeMyImage);
+                    AddDialogueToQueue("...?");
+                    AddDialogueToQueue("으어어...", ChangeOpponentImage);
+                    AddDialogueToQueue("끄어어어어...");
+                    AddDialogueToQueue("...", ChangeMyImage);
+                    AddDialogueToQueue("(충격에 다시 말을 잃어버린 듯하다...)");
+                    break;
+                }
+                if (SystemManager.instance.IsLv3DoorOpened)
+                {
+                    AddDialogueToQueue("으어...", ChangeOpponentImage);
+                    AddDialogueToQueue("그어어어...");
+                    AddDialogueToQueue("끄어어어어어...?");
+                    AddDialogueToQueue("...", ChangeMyImage);
+                    AddDialogueToQueue("뭐야 친구! 2단계 게임까지 깨고 온 건가!", ChangeOpponentImage);
+                    AddDialogueToQueue("...??", ChangeMyImage);
+                    AddDialogueToQueue("대애애애단하구만! 내 소싯적 시절에도 2단계는 못 깼었는데.", ChangeOpponentImage);
+                    AddDialogueToQueue("이거이거, 너무 놀라서 500년간 잠겨있던 내 말문이 다 트여버렸구만!");
+                    AddDialogueToQueue("하하하하하하하하!!");
+                    AddDialogueToQueue("...", ChangeMyImage);
+                    AddDialogueToQueue("(이런 캐릭터였나..?)");
+                    AddDialogueToQueue("문을 열어주지, 마지막 게임도 힘내라고 친구!", ChangeOpponentImage);
+                    AddDialogueToQueue("...", ChangeMyImage);
+                    AddDialogueToQueue("(진짜 천사 빼고는 다 친절하네...)");
+                }
+                else
+                {
+                    AddDialogueToQueue("으어...", ChangeOpponentImage);
+                    AddDialogueToQueue("그어어어...");
+                    AddDialogueToQueue("끄어어어어어...");
+                    AddDialogueToQueue("...", ChangeMyImage);
+                    AddDialogueToQueue("(말이 통하질 않는 듯하다.)");
+                    AddDialogueToQueue("(2단계 게임을 깨고 오면 방법이 생길지도..?)");
+                }
+
+                    break;
             case "Door_Lv1":
                 if (!SystemManager.instance.IsLv1DoorOpened) AddDialogueToQueue("열리지 않는다.", ChangeMyImage);
                 break;
@@ -231,7 +353,6 @@ public class CommunicationHandler : NPC, ICommunication
                     AddDialogueToQueue("문을 열어주지, 안녕히 가시게.");
                     SystemManager.instance.IsExit = true;
                 }
-                
                 break;
         }
 
@@ -315,7 +436,7 @@ public class CommunicationHandler : NPC, ICommunication
 
     public void CommunicationEnd()
     {
-        chatWindow.SetActive(false);
+        chatWindow.gameObject.SetActive(false);
         if (ExitAlertWindow) ExitAlertWindow.SetActive(false);
     }
 

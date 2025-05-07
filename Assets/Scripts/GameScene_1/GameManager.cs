@@ -14,16 +14,29 @@ public class GameManager : MonoBehaviour
     UIManager uiManager;
     public UIManager UIManager { get { return uiManager; } }
 
-    public bool isClear = false;
+    public bool isLv1Clear = false;
+    public bool isLv2Clear = false;
+    public bool isLv3Clear = false;
 
     private void Awake()
     {
-        gamemanager = this;
-        uiManager = FindObjectOfType<UIManager>();
+        if (gamemanager == null)
+        {
+            gamemanager = this;
+           // DontDestroyOnLoad(gameObject);
+        }
+        else if (gamemanager != this)
+        {
+          //  Destroy(gameObject); // 중복 객체 제거
+        }
     }
 
     private void Start()
     {
+        if (uiManager == null) // 만약 UIManager가 null이면
+        {
+            uiManager = FindObjectOfType<UIManager>();
+        }
         uiManager.UpdateScore(0);
     }
 
@@ -49,8 +62,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("Score : " + currentScore);
         uiManager.UpdateScore(currentScore);
 
-
-        if (currentScore == 3)
+        if (currentScore == 2)
         {
             ClearGame();
         }
@@ -58,8 +70,23 @@ public class GameManager : MonoBehaviour
 
     public void ClearGame()
     {
+        string currentScene = SceneManager.GetActiveScene().name;
+        if (currentScene == "GameScene_1")
+        {
+            SystemManager.instance.IsLv2DoorOpened = true;
+            isLv1Clear = true;
+        }
+        if (currentScene == "GameScene_2")
+        {
+            SystemManager.instance.IsLv3DoorOpened = true;
+            isLv2Clear = true;
+        }
+        if (currentScene == "GameScene_3")
+        {
+            isLv3Clear = true;
+        }
         Debug.Log("Game Clear");
-        isClear = true;
+       
         uiManager.GameClear();
     }
 }

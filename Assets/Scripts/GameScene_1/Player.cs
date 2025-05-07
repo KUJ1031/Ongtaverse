@@ -94,7 +94,8 @@ public class Player : MonoBehaviour
 
         if (isDead) return;
 
-        if (GameManager.Instance.isClear) return;
+        if (GameManager.Instance.isLv1Clear) return;
+        if (GameManager.Instance.isLv2Clear) return;
 
 
         if (life > 1)
