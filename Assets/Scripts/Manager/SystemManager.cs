@@ -98,7 +98,7 @@ public class SystemManager : MonoBehaviour
 
     public void Init_Level1()
     {
-       SceneManager.LoadScene("GameScene_1");
+        SceneManager.LoadScene("GameScene_1");
     }
     public void Init_Level2()
     {

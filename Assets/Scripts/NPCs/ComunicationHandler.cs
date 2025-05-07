@@ -11,8 +11,10 @@ using Unity.VisualScripting;
 public class CommunicationHandler : NPC, ICommunication
 {
     [SerializeField] private GameObject chatWindow;
-    [SerializeField] private GameObject ExitAlertWindow;
-    
+    [SerializeField] public GameObject GameStartWindow_Lv1;
+    [SerializeField] public GameObject GameStartWindow_Lv2;
+    [SerializeField] public GameObject GameStartWindow_Lv3;
+
 
     [SerializeField] private GameObject opponent;
     [SerializeField] private Sprite[] opponentSprites;
@@ -28,14 +30,18 @@ public class CommunicationHandler : NPC, ICommunication
     private bool isDialogueActive = false;
     private bool waitingForNextLine = false;
 
+    public static CommunicationHandler Instance;
+
     private void Awake()
     {
         dialogueQueue = new Queue<DialogueEntry>();
         opponent.gameObject.SetActive(false);
         my.gameObject.SetActive(false);
         doorAnimationHandler = GetComponent<DoorAnimationHandler>();
+        if (GameStartWindow_Lv1 == null)
+            GameStartWindow_Lv1 = GameObject.Find("GameStartWindow_Lv1");
 
-       // ExitAlertWindow.SetActive(false);
+        // ExitAlertWindow.SetActive(false);
 
         if (systemManager == null)
         {
@@ -144,20 +150,56 @@ public class CommunicationHandler : NPC, ICommunication
                     break;
                 case "Ladder_Lv1":
                     {
+                        CommunicationEnd();
                         SystemManager.instance.Init_Level1();
                     }
                     break;
                 case "Ladder_Lv2":
                     {
+                        CommunicationEnd();
                         SystemManager.instance.Init_Level2();
                     }
                     break;
                 case "Ladder_Lv3":
                     {
+                        CommunicationEnd();
+                        //GameStartWindow.SetActive(true);
                         SystemManager.instance.Init_Level3();
                     }
                     break;
-                    
+                case "Explain_Lv1":
+                    {
+                        CommunicationEnd();
+                        GameStartWindow_Lv1.gameObject.SetActive(true);
+                        foreach (Transform child in GameStartWindow_Lv1.transform)
+                        {
+                            child.gameObject.SetActive(true);
+                        }
+                        Invoke("GameStartWindow_Lv1SetActivefalse", 3f);
+                    }
+                    break;
+                case "Explain_Lv2":
+                    {
+                        CommunicationEnd(); GameStartWindow_Lv2.SetActive(true);
+                        foreach (Transform child in GameStartWindow_Lv2.transform)
+                        {
+                            child.gameObject.SetActive(true);
+                        }
+                        Invoke("GameStartWindow_Lv2SetActivefalse", 3f);
+                    }
+                    break;
+                case "Explain_Lv3":
+                    {
+                        CommunicationEnd();
+                        GameStartWindow_Lv3.SetActive(true);
+                        foreach (Transform child in GameStartWindow_Lv3.transform)
+                        {
+                            child.gameObject.SetActive(true);
+                        }
+                        Invoke("GameStartWindow_Lv3SetActivefalse", 3f);
+                    }
+                    break;
+
             }
         }
         Communication(NPCName);
@@ -380,19 +422,6 @@ public class CommunicationHandler : NPC, ICommunication
         SetActiveExit();
     }
 
-    public void SetActiveLv1GameStartWindow()
-    {
-        if (ExitAlertWindow != null)
-        {
-            ExitAlertWindow.SetActive(true);
-            Debug.Log("ExitAlertWindow 활성화.");
-        }
-        else
-        {
-            Debug.LogError("ExitAlertWindow null입니다. Inspector에 GameObject를 할당했는지 확인하세요.");
-        }
-    }
-
     // 대사를 큐에 추가
     private void AddDialogueToQueue(string dialogue, System.Action onDisplay = null)
     {
@@ -430,8 +459,9 @@ public class CommunicationHandler : NPC, ICommunication
     public void CommunicationEnd()
     {
         chatWindow.gameObject.SetActive(false);
-        if (ExitAlertWindow) ExitAlertWindow.SetActive(false);
     }
+
+    
 
     void UnlockDoor()
     {
@@ -449,6 +479,19 @@ public class CommunicationHandler : NPC, ICommunication
             Line = line;
             OnDisplay = onDisplay;
         }
+    }
+
+    void GameStartWindow_Lv1SetActivefalse()
+    {
+        GameStartWindow_Lv1.SetActive(false);
+    }
+    void GameStartWindow_Lv2SetActivefalse()
+    {
+        GameStartWindow_Lv2.SetActive(false);
+    }
+    void GameStartWindow_Lv3SetActivefalse()
+    {
+        GameStartWindow_Lv3.SetActive(false);
     }
 
 }
