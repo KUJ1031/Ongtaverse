@@ -96,7 +96,7 @@ public class Player : MonoBehaviour
 
         if (GameManager.Instance.isLv1Clear) return;
         if (GameManager.Instance.isLv2Clear) return;
-
+        if (GameManager.Instance.isLv3Clear) return;
 
         if (life > 1)
         {

@@ -14,9 +14,10 @@ public class GameManager : MonoBehaviour
     UIManager uiManager;
     public UIManager UIManager { get { return uiManager; } }
 
-    public bool isLv1Clear = false;
-    public bool isLv2Clear = false;
-    public bool isLv3Clear = false;
+    [HideInInspector] public bool isLv1Clear = false;
+    [HideInInspector] public bool isLv2Clear = false;
+    [HideInInspector] public bool isLv3Clear = false;
+    [HideInInspector] public bool isLvAllClear = false;
 
     private void Awake()
     {
@@ -62,9 +63,35 @@ public class GameManager : MonoBehaviour
         Debug.Log("Score : " + currentScore);
         uiManager.UpdateScore(currentScore);
 
-        if (currentScore == 2)
+        if (PlayerPrefs.GetInt("AllClear", 0) == 1)
         {
-            ClearGame();
+        }
+        else
+        {
+            string currentScene = SceneManager.GetActiveScene().name;
+
+            if (currentScene == "GameScene_1")
+            {
+                if (currentScore == 5)
+                {
+                    ClearGame();
+                }
+            }
+            if (currentScene == "GameScene_2")
+            {
+                if (currentScore == 7)
+                {
+                    ClearGame();
+                }
+            }
+            if (currentScene == "GameScene_3")
+            {
+                if (currentScore == 10)
+                {
+                    ClearGame();
+                }
+            }
+           
         }
     }
 
@@ -84,6 +111,7 @@ public class GameManager : MonoBehaviour
         if (currentScene == "GameScene_3")
         {
             isLv3Clear = true;
+            PlayerPrefs.SetInt("AllClear", 1);
         }
         Debug.Log("Game Clear");
        

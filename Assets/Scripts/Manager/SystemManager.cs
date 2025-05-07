@@ -31,9 +31,10 @@ public class SystemManager : MonoBehaviour
     [SerializeField] private GameObject Ladder_Lv1;
     [SerializeField] private GameObject Ladder_Lv2;
     [SerializeField] private GameObject Ladder_Lv3;
-    [SerializeField] private Button ExitButton;
 
     public static SystemManager instance;
+
+    public bool GameStartInit = true;
 
     void Awake()
     {
@@ -50,7 +51,12 @@ public class SystemManager : MonoBehaviour
     }
 
     private void Start()
-    {
+    { 
+        if (GameStartInit)
+        {
+            PlayerPrefs.SetInt("AllClear", 0);  // 처음 실행일 때 0으로 초기화
+            GameStartInit = false;
+        }
         boxCollider_Door1 = Door_Lv1.GetComponent<BoxCollider2D>();
         boxCollider_Door2 = Door_Lv2.GetComponent<BoxCollider2D>();
         boxCollider_Door3 = Door_Lv3.GetComponent<BoxCollider2D>();
@@ -86,8 +92,6 @@ public class SystemManager : MonoBehaviour
             if (Ladder_Lv2 != null) boxCollider_Ladder2 = Ladder_Lv2.GetComponent<BoxCollider2D>();
             if (Ladder_Lv3 == null) Ladder_Lv3 = GameObject.Find("Ladder_Lv3");
             if (Ladder_Lv3 != null) boxCollider_Ladder3 = Ladder_Lv3.GetComponent<BoxCollider2D>();
-
-            if (ExitButton == null) ExitButton = GameObject.Find("ExitButton")?.GetComponent<Button>();
         }
     }
 
@@ -204,7 +208,7 @@ public class SystemManager : MonoBehaviour
             Debug.Log("문이 열리지 않았습니다." + IsExit);
         }
     }
-    public void Button_Exit()
+    public void Exit()
     {
         {
 #if UNITY_EDITOR

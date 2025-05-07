@@ -2,11 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
 
+    public TextMeshProUGUI TargetScoreText;
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI scoreText2;
     public TextMeshProUGUI bestScoreText;
@@ -19,8 +21,27 @@ public class UIManager : MonoBehaviour
 
     public static UIManager instance;
 
+
     private void Awake()
     {
+        string currentScene = SceneManager.GetActiveScene().name;
+
+        if (PlayerPrefs.GetInt("AllClear", 0) == 1)
+        {
+            TargetScoreText.text = "최고 기록을 갱신해보자!";
+        }
+        else if (currentScene == "GameScene_1")
+        {
+            TargetScoreText.text = "목표 점수 : 5점";
+        }
+        else if (currentScene == "GameScene_2")
+        {
+            TargetScoreText.text = "목표 점수 : 7점";
+        }
+        else if (currentScene == "GameScene_3")
+        {
+            TargetScoreText.text = "목표 점수 : 10점";
+        }
         if (GameManager.Instance.isLv3Clear)
         {
             int bestScore = PlayerPrefs.GetInt("BestScore", 0);
@@ -44,7 +65,7 @@ public class UIManager : MonoBehaviour
         if (GameOverImage == null) Debug.LogError("GameOverImage null");
         if (scoreText == null) Debug.LogError("scoreText null");
 
-        GameOverImage.gameObject.SetActive(false);
+        GameOverImage.gameObject.SetActive(false);        
     }
 
     public void GameOver()

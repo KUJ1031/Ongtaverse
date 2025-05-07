@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Obstacle : MonoBehaviour
 {
@@ -15,15 +16,34 @@ public class Obstacle : MonoBehaviour
 
     public float widthPadding = 4f;
 
-    GameManager gamemanager;
+
 
     private void Start()
     {
-        gamemanager = GameManager.Instance;
+       
     }
 
     public Vector3 SetRandomPlace(Vector3 lastPostion, int obstacleCount)
     {
+        string currentScene = SceneManager.GetActiveScene().name;
+        if (currentScene == "GameScene_1")
+        {
+            holeSizeMin = 3f;
+            holeSizeMax = 5f;
+            widthPadding = 5f;
+        }
+        if (currentScene == "GameScene_2")
+        {
+            holeSizeMin = 2f;
+            holeSizeMax = 4f;
+            widthPadding = 4f;
+        }
+        if (currentScene == "GameScene_3")
+        {
+            holeSizeMin = 1f;
+            holeSizeMax = 3f;
+            widthPadding = 3f;
+        }
         float holeSize = Random.Range(holeSizeMin, holeSizeMax);
         float halfHoleSize = holeSize / 2;
 
@@ -43,7 +63,7 @@ public class Obstacle : MonoBehaviour
         Player player = collision.GetComponent<Player>();
         if (player != null)
         {
-            gamemanager.AddScore(1);
+            GameManager.Instance.AddScore(1);
         }
     }
 }

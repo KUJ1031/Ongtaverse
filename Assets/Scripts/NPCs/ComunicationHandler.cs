@@ -213,7 +213,7 @@ public class CommunicationHandler : NPC, ICommunication
                     AddDialogueToQueue("조금 대단하시네요. 저만큼은 아니지만.");
                     AddDialogueToQueue("...", ChangeMyImage);
                     AddDialogueToQueue("근데 왜 자꾸 일부러 말 걸러 오시죠?", ChangeOpponentImage);
-                    AddDialogueToQueue("밑에 전설의 마법사나 보러 가시죠. 기다리고 있는 것같던데...");
+                    AddDialogueToQueue("심심하신 건 알겠는데, 아직 해야할 일이 남으셨잖아요?");
                     AddDialogueToQueue("...", ChangeMyImage);
                     AddDialogueToQueue("(얘 천사 맞아?)", ChangeMyImage);
                     break;
@@ -258,7 +258,7 @@ public class CommunicationHandler : NPC, ICommunication
                     AddDialogueToQueue("정말 훌륭하군! 특별히 그림일기장이라도 하나 사주겠네!");
                     AddDialogueToQueue("...", ChangeMyImage);
                     AddDialogueToQueue("(왜 이렇게 일기를 좋아하지?)");
-                    AddDialogueToQueue("밑에 마법사에게 가보게", ChangeOpponentImage);
+                    AddDialogueToQueue("밑에 마법사에게 가보게.", ChangeOpponentImage);
                     AddDialogueToQueue("분명 자네에게 어마어마한 선물을 줄 걸세.");
                     AddDialogueToQueue("...", ChangeMyImage);
                     AddDialogueToQueue("(가보자.)");
@@ -298,7 +298,8 @@ public class CommunicationHandler : NPC, ICommunication
                 if (GameManager.Instance.isLv3Clear)
                 {
                     AddDialogueToQueue("아니!!! 3단계를 깼다고!!!", ChangeOpponentImage);
-                    AddDialogueToQueue("이렇게 대애애단할 수가!! 내 정말 축하하ㄴ...");
+                    AddDialogueToQueue("이렇게 대애애단할 수가!! 밑에 마법사가 정말 좋아할걸세!!!!");
+                    AddDialogueToQueue("내 정말 축하하ㄴ...");
                     AddDialogueToQueue("...");
                     AddDialogueToQueue("...", ChangeMyImage);
                     AddDialogueToQueue("...?");
@@ -369,22 +370,14 @@ public class CommunicationHandler : NPC, ICommunication
         }
     }
 
-    public void SetActiveExitAlert()
+    public void SetActiveExit()
     {
-        if (ExitAlertWindow != null)
-        {
-            ExitAlertWindow.SetActive(true);
-            Debug.Log("ExitAlertWindow 활성화.");
-        }
-        else
-        {
-            Debug.LogError("ExitAlertWindow null입니다. Inspector에 GameObject를 할당했는지 확인하세요.");
-        }
+        SystemManager.instance.Exit();
     }
 
     public void CheckExit()
     {
-        SetActiveExitAlert();
+        SetActiveExit();
     }
 
     public void SetActiveLv1GameStartWindow()
