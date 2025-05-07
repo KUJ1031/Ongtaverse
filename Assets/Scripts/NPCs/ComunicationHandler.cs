@@ -51,6 +51,7 @@ public class CommunicationHandler : NPC, ICommunication
                 Debug.LogError("GameManager를 찾을 수 없습니다. 씬에 존재하는지 확인하세요.");
             }
         }
+        Time.timeScale = 1f;
     }
 
     private void Update()

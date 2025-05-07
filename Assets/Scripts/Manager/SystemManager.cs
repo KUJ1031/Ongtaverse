@@ -61,6 +61,8 @@ public class SystemManager : MonoBehaviour
         boxCollider_Door2 = Door_Lv2.GetComponent<BoxCollider2D>();
         boxCollider_Door3 = Door_Lv3.GetComponent<BoxCollider2D>();
         boxCollider_DoorExit = Door_Exit.GetComponent<BoxCollider2D>();
+
+        
     }
 
     void OnEnable()

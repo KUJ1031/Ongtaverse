@@ -27,21 +27,25 @@ public class Player : MonoBehaviour
     void Start()
     {
         gameManager = GameManager.Instance;
+
         animator = GetComponentInChildren<Animator>();
         _rigidbody = GetComponent<Rigidbody2D>();
 
-
         if (animator == null)
         {
-            Debug.Log("animator null");
+            Debug.LogError("Animator가 할당되지 않았습니다.");
         }
 
         if (_rigidbody == null)
         {
-            Debug.Log("_rigidbody null");
+            Debug.LogError("Rigidbody2D가 할당되지 않았습니다.");
+        }
+
+        if (gameManager == null)
+        {
+            Debug.LogError("GameManager 인스턴스를 찾을 수 없습니다.");
         }
     }
-
     // Update is called once per frame
     void Update()
     {

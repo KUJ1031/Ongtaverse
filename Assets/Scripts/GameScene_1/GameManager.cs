@@ -6,7 +6,6 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     static GameManager gamemanager;
-
     public static GameManager Instance { get { return gamemanager; } }
 
     private int currentScore = 0;
@@ -24,97 +23,140 @@ public class GameManager : MonoBehaviour
         if (gamemanager == null)
         {
             gamemanager = this;
-           // DontDestroyOnLoad(gameObject);
+            // DontDestroyOnLoad(gameObject);
         }
         else if (gamemanager != this)
         {
-          //  Destroy(gameObject); // 중복 객체 제거
+            // Destroy(gameObject); // 중복 객체 제거
         }
     }
 
     private void Start()
     {
-        if (uiManager == null) // 만약 UIManager가 null이면
+        try
         {
-            uiManager = FindObjectOfType<UIManager>();
+            if (uiManager == null)
+            {
+                uiManager = FindObjectOfType<UIManager>();
+            }
+
+            if (uiManager != null)
+            {
+                uiManager.UpdateScore(0);
+            }
+            else
+            {
+                Debug.LogWarning("UIManager가 씬에서 발견되지 않았습니다.");
+            }
         }
-        uiManager.UpdateScore(0);
+        catch (System.Exception ex)
+        {
+            Debug.LogError("Start 예외: " + ex.Message);
+        }
     }
 
     public void GameOver()
     {
+        Time.timeScale = 0f;
         Debug.Log("Game Over");
-        uiManager.GameOver();
+        try
+        {
+            uiManager?.GameOver();
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogError("GameOver 예외: " + ex.Message);
+        }
     }
 
     public void RestartGame()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        try
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogError("RestartGame 예외: " + ex.Message);
+        }
     }
 
     public void LoadMainScene()
     {
-        SceneManager.LoadScene("MainScene");
+        try
+        {
+            SceneManager.LoadScene("MainScene");
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogError("LoadMainScene 예외: " + ex.Message);
+        }
     }
 
     public void AddScore(int score)
     {
-        currentScore += score;
-        Debug.Log("Score : " + currentScore);
-        uiManager.UpdateScore(currentScore);
+        try
+        {
+            currentScore += score;
+            Debug.Log("Score : " + currentScore);
+            uiManager?.UpdateScore(currentScore);
 
-        if (PlayerPrefs.GetInt("AllClear", 0) == 1)
-        {
-        }
-        else
-        {
+            if (PlayerPrefs.GetInt("AllClear", 0) == 1) return;
+
             string currentScene = SceneManager.GetActiveScene().name;
 
-            if (currentScene == "GameScene_1")
+            if (currentScene == "GameScene_1" && currentScore == 5)
             {
-                if (currentScore == 5)
-                {
-                    ClearGame();
-                }
+                ClearGame();
             }
-            if (currentScene == "GameScene_2")
+            else if (currentScene == "GameScene_2" && currentScore == 7)
             {
-                if (currentScore == 7)
-                {
-                    ClearGame();
-                }
+                ClearGame();
             }
-            if (currentScene == "GameScene_3")
+            else if (currentScene == "GameScene_3" && currentScore == 10)
             {
-                if (currentScore == 10)
-                {
-                    ClearGame();
-                }
+                ClearGame();
             }
-           
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogError("AddScore 예외: " + ex.Message);
         }
     }
 
     public void ClearGame()
     {
-        string currentScene = SceneManager.GetActiveScene().name;
-        if (currentScene == "GameScene_1")
+        try
         {
-            SystemManager.instance.IsLv2DoorOpened = true;
-            isLv1Clear = true;
+            string currentScene = SceneManager.GetActiveScene().name;
+
+            if (currentScene == "GameScene_1")
+            {
+                if (SystemManager.instance != null)
+                    SystemManager.instance.IsLv2DoorOpened = true;
+                isLv1Clear = true;
+                Time.timeScale = 0f;
+            }
+            else if (currentScene == "GameScene_2")
+            {
+                if (SystemManager.instance != null)
+                    SystemManager.instance.IsLv3DoorOpened = true;
+                isLv2Clear = true;
+                Time.timeScale = 0f;
+            }
+            else if (currentScene == "GameScene_3")
+            {
+                isLv3Clear = true;
+                PlayerPrefs.SetInt("AllClear", 1);
+                Time.timeScale = 0f;
+            }
+
+            Debug.Log("Game Clear");
+            uiManager?.GameClear();
         }
-        if (currentScene == "GameScene_2")
+        catch (System.Exception ex)
         {
-            SystemManager.instance.IsLv3DoorOpened = true;
-            isLv2Clear = true;
+            Debug.LogError("ClearGame 예외: " + ex.Message);
         }
-        if (currentScene == "GameScene_3")
-        {
-            isLv3Clear = true;
-            PlayerPrefs.SetInt("AllClear", 1);
-        }
-        Debug.Log("Game Clear");
-       
-        uiManager.GameClear();
     }
 }
